@@ -31,7 +31,7 @@ class GuruController extends Controller
         User::create([
             'name' => $request->name,
             'phone' => $request->phone,
-            'password' => Hash::make('12345678'),
+            'password' => Hash::make('guru12345'),
             'role' => 'guru',
         ]);
 

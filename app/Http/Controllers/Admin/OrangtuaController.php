@@ -53,7 +53,7 @@ class OrangtuaController extends Controller
             'name' => $request->name,
             'phone' => $request->phone,
             'email' => $request->email,
-            'password' => Hash::make('12345678'),
+            'password' => Hash::make(value: 'orangtua12345'),
             'role' => 'orangtua',
         ]);
 
