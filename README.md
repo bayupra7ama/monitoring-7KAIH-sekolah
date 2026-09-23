@@ -1,59 +1,226 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<div align="center">
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# 🏫 Monitoring 7 Kebiasaan Anak Indonesia Hebat
 
-## About Laravel
+### School, teacher, and parent collaboration platform for student habit monitoring
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+[![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white)](https://laravel.com/)
+[![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?logo=php&logoColor=white)](https://www.php.net/)
+[![WhatsApp](https://img.shields.io/badge/OTP-WhatsApp-25D366?logo=whatsapp&logoColor=white)](#authentication--otp)
+[![Excel](https://img.shields.io/badge/Export-Excel-217346?logo=microsoftexcel&logoColor=white)](https://laravel-excel.com/)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+</div>
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## Overview
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+This application supports monitoring of **7 Kebiasaan Anak Indonesia Hebat (7KAIH)** through collaboration between school administrators, teachers, and parents.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+The system separates workflows by role. Administrators manage school master data, teachers monitor student journals and learning materials, while parents record children's daily habits and communicate feedback.
 
-## Laravel Sponsors
+Authentication is strengthened with a WhatsApp OTP verification step before users access protected application areas.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## User Roles
 
-### Premium Partners
+### 🛠 Administrator
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+- Admin dashboard
+- Manage teachers
+- Manage classes
+- Manage students
+- Manage parents
+- Assign / remove students from classes
+- Import teacher data from Excel
+- Import student data from Excel
 
-## Contributing
+### 👨‍🏫 Teacher
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- Teacher dashboard
+- Create and manage learning materials
+- Monitor student journals
+- Daily journal monitoring
+- Inspect journal history by student
+- Export monthly monitoring data to Excel
+- Export individual student journal data
 
-## Code of Conduct
+### 👨‍👩‍👧 Parent
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- Parent dashboard
+- View children's learning materials
+- View material detail
+- Submit feedback
+- View feedback history
+- Record children's daily habit journals
+- View journal history
 
-## Security Vulnerabilities
+## Authentication & OTP
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant L as Laravel
+    participant W as WhatsApp OTP Server
+    U->>L: Login
+    L->>W: Send 4-digit OTP
+    W-->>U: WhatsApp message
+    U->>L: Submit OTP
+    L->>L: Verify code & expiry
+    L-->>U: Access role dashboard
+```
 
-## License
+OTP codes are generated for each user and expire after **5 minutes**.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+The WhatsApp sender is configured through:
+
+```env
+WA_SERVER_URL=
+```
+
+A related WhatsApp server project is available at:
+
+**[wa-server-bot →](https://github.com/bayupra7ama/wa-server-bot)**
+
+## System Architecture
+
+```mermaid
+flowchart LR
+    A[Admin] --> L[Laravel 12]
+    T[Teacher] --> L
+    P[Parent] --> L
+    L --> DB[(Database)]
+    L --> O[OTP Service]
+    O --> W[WhatsApp Server]
+    L --> E[Excel Import / Export]
+```
+
+## Tech Stack
+
+| Area | Technology |
+| --- | --- |
+| Backend / Web | Laravel 12 |
+| Language | PHP 8.2+ |
+| Authentication | Laravel auth + OTP middleware |
+| OTP Channel | WhatsApp integration |
+| Frontend | Blade + Vite |
+| Data Import / Export | Maatwebsite Laravel Excel |
+| Database | Laravel-supported relational database |
+| Testing | PHPUnit |
+
+## Main Domain Model
+
+```text
+User
+├── Admin
+├── Guru
+└── Orang Tua
+      │
+      └── Student
+           ├── Class Room
+           └── Jurnal
+
+Guru
+├── Materi
+└── Monitoring Jurnal
+
+Materi
+└── Feedback
+```
+
+## Project Structure
+
+```text
+app/
+├── Exports/             # Monthly journal Excel exports
+├── Imports/             # Teacher / student Excel imports
+├── Http/
+│   ├── Controllers/
+│   │   ├── Admin/
+│   │   ├── Guru/
+│   │   └── Orangtua/
+│   └── Middleware/
+│       ├── OtpVerified.php
+│       └── RoleMiddleware.php
+├── Models/
+└── Services/
+    └── OtpService.php
+
+resources/views/
+├── admin/
+├── guru/
+├── orangtua/
+└── auth/
+```
+
+## Installation
+
+### Requirements
+
+- PHP 8.2+
+- Composer
+- Node.js & npm
+- Database supported by Laravel
+- WhatsApp OTP server reachable from Laravel
+
+### 1. Clone
+
+```bash
+git clone https://github.com/bayupra7ama/monitoring-7KAIH-sekolah.git
+cd monitoring-7KAIH-sekolah
+```
+
+### 2. Install dependencies
+
+```bash
+composer install
+npm install
+```
+
+### 3. Environment
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+Configure database settings and the WhatsApp service:
+
+```env
+WA_SERVER_URL=http://YOUR-WHATSAPP-SERVER
+```
+
+### 4. Database
+
+```bash
+php artisan migrate
+php artisan db:seed
+```
+
+### 5. Run
+
+```bash
+composer run dev
+```
+
+Or run the services separately:
+
+```bash
+php artisan serve
+npm run dev
+```
+
+## Security Notes
+
+- Keep WhatsApp server credentials and application secrets in environment variables.
+- Do not commit production `.env` files.
+- Use HTTPS in production.
+- Apply appropriate access control to the WhatsApp OTP service.
+- Rate-limit OTP endpoints in production environments.
+
+---
+
+<div align="center">
+
+Built to connect school monitoring, teacher insight, and parent participation in one workflow.
+
+</div>
